@@ -34,20 +34,20 @@
                 <th>Actions</th>  
             </tr>  
         </thead>  
-    <% todoarray.forEach((element , index) => { %>
+    <% displayTodo.forEach((element , index) => { %>
             <tbody>  
                 <tr>  
                     <td><%= index + 1 %></td> <!-- Assuming 'index' holds the current row index -->  
                     <td><%= element.title %></td>  
                     <td><%= element.content %></td>  
                     <td>  
-                        <form action="/edit/<%= index %>" method="get">
+                        <form action="/edit/<%= element._id %>" method="get">
                             <button class="btn btn-warning">Edit</button>  
                         </form>
                         
                     </td>  
                     <td>
-                        <form action="/delete" method="post">
+                        <form action="/delete/<%= element._id %>" method="post">
                             <button class="btn btn-danger">Delete</button>  
                             <input type="text" hidden value="<%= index %>">
                         </form>
