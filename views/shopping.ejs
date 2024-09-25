@@ -43,6 +43,7 @@
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Total</th>
+                <th>Action</th>
             </tr>
         </thead>
         <% displayItem.forEach((element , index)=> { %>
@@ -58,10 +59,10 @@
                         <%= element.quantity %>
                     </td>
                     <td>
-                        <%= element.price %>
+                        $<%= element.price %>
                     </td>
                     <td>
-                        <%= element.total %>
+                        $<%= element.total %>
                     </td>
                     <td>
                         <form action="/deleted/<%= element._id %>" method="post">
