@@ -27,6 +27,15 @@ const todoSchema = mongoose.Schema({
 
 const todomodel = mongoose.model("todo_collection", todoSchema);
 
+const shoppingSchema = mongoose.Schema({
+    item: { type: String, trim: true, required: true },
+    quantity: { type: Number, trim: true, required: true },
+    price: { type: Number, trim: true, required: true },
+    total: { type: Number, trim: true }
+}, { timestamps: true });
+
+const shoppingmodel = mongoose.model("shopping_collection", shoppingSchema);
+
 // Routes
 app.get("/", (request, response) => {
     response.render('signup', { errormessage });
@@ -39,6 +48,15 @@ app.get("/login", (request, response) => {
 app.get("/dashboard", (request, response) => {
     response.render('dashboard');
 });
+app.get("/shopping", async (req, res) => {
+    try {
+        const displayItem = await shoppingmodel.find();
+        res.render("shopping", { displayItem });
+    } catch (error) {
+        console.log(error);
+        res.redirect("/shopping");
+    }
+})
 
 app.get("/todo", async (request, response) => {
     try {
@@ -65,6 +83,12 @@ app.get("/edit/:index", async (request, response) => {
         response.redirect("/todo");
     }
 });
+
+
+
+
+
+
 
 app.post("/register", async (request, response) => {
     try {
@@ -115,6 +139,30 @@ app.post("/addtodo", async (request, response) => {
     }
 });
 
+app.post("/additem", async (req, res) => {
+    try {
+        const { item, quantity, price , total } = req.body;
+        
+        const shopitem = await shoppingmodel.create({
+            item,
+            quantity,
+            price,
+            total
+        });
+
+        if (shopitem) {
+            console.log("Item added successfully");
+            res.redirect('/shopping');
+        } else {
+            console.log("Error adding item");
+            res.redirect('/shopping');
+        }
+    } catch (error) {
+        console.log(error);
+        res.redirect('/shopping-list');
+    }
+})
+
 app.post("/delete/:index", async (request, response) => {
     const { index } = request.params;
     try {
@@ -129,6 +177,19 @@ app.post("/delete/:index", async (request, response) => {
     } catch (error) {
         console.log(error);
         response.redirect("/todo");
+    }
+});
+
+app.post("/deleted/:id", async (req, res)=>{
+    const { id } = req.params
+    try {
+        let deletedItem = await shoppingmodel.findOneAndDelete(id)
+        res.redirect("/shopping");
+        console.log("Deleted Successfully");
+        
+    } catch (error) {
+        console.log(error);  
+        res.redirect("/shopping");
     }
 });
 
